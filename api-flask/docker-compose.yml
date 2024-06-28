@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: crhystamil
+      POSTGRES_USER: crhystamil
+      POSTGRES_PASSWORD: crhystamil
+    ports:
+      - "5432:5432"
+    restart: always
+
+  web:
+    build: .
+    command: flask run --host=0.0.0.0
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: run.py
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://crhystamil:crhystamil@db/crhystamil
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  postgres_data:
+
